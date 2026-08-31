@@ -108,7 +108,7 @@
       font-family: 'Comic Sans MS', cursive, sans-serif;
     }
 
-    /* Unique Rotation Angles */
+    /* Rotation Angles */
     .polaroid:nth-child(1) { transform: rotate(-5deg); }
     .polaroid:nth-child(2) { transform: rotate(3deg) scale(1.04); }
     .polaroid:nth-child(3) { transform: rotate(-3deg); }
@@ -188,12 +188,7 @@
 </head>
 <body>
 
-  <!-- Working Online Royalty-Free Background Music -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
-  </audio>
-
-  <button class="music-btn" onclick="toggleMusic()">🎵 Play Music</button>
+  <button class="music-btn" onclick="toggleTune()">🎵 Play Birthday Tune</button>
 
   <div class="container">
     <h1 class="main-title">Happy Birthday! 🎂✨</h1>
@@ -216,7 +211,7 @@
       </div>
     </div>
 
-    <!-- Message & Celebration Section -->
+    <!-- Message Section -->
     <div class="wish-card">
       <p class="message">
         "Wishing you a year filled with happiness, new adventures, and unlimited laughter. May every dream you chase turn into reality!"
@@ -235,43 +230,75 @@
   </div>
 
   <script>
-    const music = document.getElementById('bgMusic');
-    const btn = document.querySelector('.music-btn');
+    let isPlaying = false;
+    let audioCtx = null;
+    let timerId = null;
 
-    // Toggle Play/Pause Music
-    function toggleMusic() {
-      if (music.paused) {
-        music.play().then(() => {
-          btn.innerText = "⏸️ Pause Music";
-        }).catch(err => {
-          console.log("Audio play error:", err);
-        });
+    // Happy Birthday Notes Frequencies
+    const notes = [
+      { f: 261.63, d: 0.3 }, { f: 261.63, d: 0.3 }, { f: 293.66, d: 0.6 }, { f: 261.63, d: 0.6 }, { f: 349.23, d: 0.6 }, { f: 329.63, d: 1.0 },
+      { f: 261.63, d: 0.3 }, { f: 261.63, d: 0.3 }, { f: 293.66, d: 0.6 }, { f: 261.63, d: 0.6 }, { f: 392.00, d: 0.6 }, { f: 349.23, d: 1.0 },
+      { f: 261.63, d: 0.3 }, { f: 261.63, d: 0.3 }, { f: 523.25, d: 0.6 }, { f: 440.00, d: 0.6 }, { f: 349.23, d: 0.6 }, { f: 329.63, d: 0.6 }, { f: 293.66, d: 0.8 },
+      { f: 466.16, d: 0.3 }, { f: 466.16, d: 0.3 }, { f: 440.00, d: 0.6 }, { f: 349.23, d: 0.6 }, { f: 392.00, d: 0.6 }, { f: 349.23, d: 1.2 }
+    ];
+
+    function playNote(freq, duration) {
+      if (!audioCtx || !isPlaying) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function startMelody() {
+      if (isPlaying) return;
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      isPlaying = true;
+      document.querySelector('.music-btn').innerText = "⏹️ Stop Music";
+      
+      let step = 0;
+      function loop() {
+        if (!isPlaying) return;
+        let current = notes[step];
+        playNote(current.f, current.d);
+        step = (step + 1) % notes.length;
+        timerId = setTimeout(loop, current.d * 800);
+      }
+      loop();
+    }
+
+    function stopMelody() {
+      isPlaying = false;
+      clearTimeout(timerId);
+      document.querySelector('.music-btn').innerText = "🎵 Play Birthday Tune";
+    }
+
+    function toggleTune() {
+      if (isPlaying) {
+        stopMelody();
       } else {
-        music.pause();
-        btn.innerText = "🎵 Play Music";
+        startMelody();
       }
     }
 
-    // Confetti Cannon & Auto Music Play on Click
     function triggerCelebration() {
-      // Auto-play music when surprise button is clicked
-      if (music.paused) {
-        music.play().then(() => {
-          btn.innerText = "⏸️ Pause Music";
-        }).catch(err => console.log(err));
-      }
-
-      // Reveal Secret Message Box
+      startMelody();
       document.getElementById('secretBox').style.display = 'block';
 
-      // Fire Main Confetti Burst
       confetti({
         particleCount: 150,
         spread: 80,
         origin: { y: 0.6 }
       });
 
-      // Secondary Confetti Wave
       setTimeout(() => {
         confetti({
           particleCount: 100,
