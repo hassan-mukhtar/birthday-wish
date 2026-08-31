@@ -26,18 +26,23 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       color: #fff;
-      padding: 10px 18px;
+      padding: 10px 20px;
       border-radius: 30px;
       cursor: pointer;
       z-index: 100;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      font-weight: 600;
       transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .music-btn:hover { background: #f43f5e; }
+    .music-btn:hover { 
+      background: #f43f5e; 
+      transform: scale(1.05);
+    }
 
     .container {
       max-width: 900px;
@@ -183,11 +188,9 @@
 </head>
 <body>
 
-  <!-- Audio Element -->
-  <audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
-</audio>
-    <source src="music.mp3" type="audio/mpeg">
+  <!-- Working Online Royalty-Free Background Music -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
   </audio>
 
   <button class="music-btn" onclick="toggleMusic()">🎵 Play Music</button>
@@ -232,32 +235,43 @@
   </div>
 
   <script>
-    // Music Toggle Function
+    const music = document.getElementById('bgMusic');
+    const btn = document.querySelector('.music-btn');
+
+    // Toggle Play/Pause Music
     function toggleMusic() {
-      const music = document.getElementById('bgMusic');
-      const btn = document.querySelector('.music-btn');
       if (music.paused) {
-        music.play();
-        btn.innerText = "⏸️ Pause Music";
+        music.play().then(() => {
+          btn.innerText = "⏸️ Pause Music";
+        }).catch(err => {
+          console.log("Audio play error:", err);
+        });
       } else {
         music.pause();
         btn.innerText = "🎵 Play Music";
       }
     }
 
-    // Confetti and Message Unlock
+    // Confetti Cannon & Auto Music Play on Click
     function triggerCelebration() {
-      // Reveal Message
+      // Auto-play music when surprise button is clicked
+      if (music.paused) {
+        music.play().then(() => {
+          btn.innerText = "⏸️ Pause Music";
+        }).catch(err => console.log(err));
+      }
+
+      // Reveal Secret Message Box
       document.getElementById('secretBox').style.display = 'block';
 
-      // Fire Confetti Cannon
+      // Fire Main Confetti Burst
       confetti({
         particleCount: 150,
         spread: 80,
         origin: { y: 0.6 }
       });
 
-      // Secondary Fireworks Wave
+      // Secondary Confetti Wave
       setTimeout(() => {
         confetti({
           particleCount: 100,
