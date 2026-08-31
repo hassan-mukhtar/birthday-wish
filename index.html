@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday! 🎉</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e1b4b);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 40px 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      max-width: 450px;
+      width: 100%;
+    }
+    h1 { font-size: 2.5rem; color: #f43f5e; margin-bottom: 15px; }
+    p { font-size: 1.1rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 25px; }
+    .btn {
+      background: #f43f5e;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .btn:hover { background: #e11d48; transform: scale(1.05); }
+    #surpriseMessage { display: none; margin-top: 20px; font-size: 1.2rem; color: #38bdf8; font-weight: bold; }
+    footer { margin-top: 30px; font-size: 0.85rem; color: #94a3b8; }
+    footer a { color: #38bdf8; text-decoration: none; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>🎂 Happy Birthday! 🎉</h1>
+    <p>Wishing you a wonderful day filled with joy, happiness, and success ahead!</p>
+    
+    <button class="btn" onclick="showSurprise()">Click for Surprise 🎁</button>
+    
+    <div id="surpriseMessage">✨ May all your dreams come true! Have an awesome year ahead! 🚀</div>
+  </div>
+
+  <footer>
+    Created with ❤️ by <a href="https://www.linkedin.com/in/syed-hassan-a4b60a395/" target="_blank">Syed Hassan Mukhtar Geelani</a>
+  </footer>
+
+  <script>
+    function showSurprise() {
+      document.getElementById('surpriseMessage').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
